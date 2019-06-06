@@ -1,0 +1,36 @@
+    @Test
+    public void ${xx}() {
+        List<${xx}> list = os.assets().list${xx}();
+        System.out.println(list.size());
+        for (${xx} object : list) {
+            System.out.println(object.getId());
+            //System.out.println(StringUtils.join(object.getNodes()));
+        }
+    }
+
+    @Test
+    public void add${xx}() {
+        ${xx} object = new ${xx}();
+        ${xx} objectBack = os.assets().create${xx}(object);
+        System.out.println(objectBack.getId());
+    }
+
+    @Test
+    public void update${xx}() {
+        ${xx} object = new ${xx}();
+        object.setId("xxxx");
+        ${xx} objectBack = os.assets().update${xx}(object);
+        System.out.println(objectBack.getId());
+    }
+
+    @Test
+    public void delete${xx}() {
+        ActionResponse delete = os.assets().delete${xx}("xxxxx");
+        System.out.println(delete);
+    }
+
+    @Test
+    public void get${xx}() {
+        ${xx} object = os.assets().get${xx}("xxxxxx");
+        System.out.println(object);
+    }

@@ -1,0 +1,46 @@
+    @Override
+    public List<Asset> list${xx}() {
+        return get(Asset.class, uri(ClientConstants.ASSETS)).executeList();
+    }
+
+    @Override
+    public Asset get${xx}(String assetId) {
+        checkNotNull(assetId);
+        return get(Asset.class, ClientConstants.ASSETS,assetId,"/").execute();
+    }
+
+    @Override
+    public ActionResponse delete${xx}(String assetId) {
+        checkNotNull(assetId);
+        return deleteWithResponse(ClientConstants.ASSETS, assetId, "/").execute();
+    }
+
+    @Override
+    public Asset update${xx}(Asset asset) {
+        checkNotNull(asset);
+       return patch(Asset.class, ClientConstants.ASSETS, asset.getId(), "/").json(JSON.toJSONString(asset)).execute();
+    }
+
+    @Override
+    public Asset create${xx}(Asset asset) {
+        checkNotNull(asset);
+        return post(Asset.class, uri(ClientConstants.ASSETS))
+                .json(JSON.toJSONString(asset))
+                .execute();
+    }
+
+
+======================================================
+
+    List<Asset> list${xx}();
+
+    Asset get${xx}(String assetId);
+
+    Asset update${xx}(Asset asset);
+
+    Asset create${xx}(Asset asset);
+
+    ActionResponse delete${xx}(String assetId);
+
+
+====================================================
