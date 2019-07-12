@@ -77,7 +77,19 @@ public class Asset {
 
     private String[] labels;
 
+    @Deprecated
     private String protocol;
+
+    private String[] protocols;
+
+    public String[] getProtocols() {
+        return protocols;
+    }
+
+    public Asset setProtocols(String[] protocols) {
+        this.protocols = protocols;
+        return this;
+    }
 
     public String getId() {
         return id;
@@ -374,11 +386,11 @@ public class Asset {
     public void setLabels(String[] labels) {
         this.labels = labels;
     }
-
+    @Deprecated
     public String getProtocol() {
         return protocol;
     }
-
+    @Deprecated
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
