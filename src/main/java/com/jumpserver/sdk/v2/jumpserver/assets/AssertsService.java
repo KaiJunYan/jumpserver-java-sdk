@@ -25,6 +25,8 @@ public interface AssertsService {
 
     ActionResponse deleteAssetsNode(String nodeId);
 
+    ActionResponse deleteAssetsNodeWithAssetCheck(String nodeId);
+
     //节点下的节点
     AssetsNode createAssetsNodeChildren(AssetsNode node);
 

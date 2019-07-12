@@ -21,6 +21,7 @@ public final class ClientConstants {
 
     // assets
     public static final String NODES = "/api/assets/v1/nodes/";
+    public static final String NODES_ASSETS = "/api/assets/v1/nodes/{id}/assets/";
 
     // nodes
     public static final String ASSETS = "/api/assets/v1/assets/";

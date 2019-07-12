@@ -9,7 +9,11 @@ import com.jumpserver.sdk.v2.model.Asset;
 import com.jumpserver.sdk.v2.model.AssetsNode;
 import com.jumpserver.sdk.v2.model.SystemUser;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,6 +38,27 @@ public class AssertsServiceImpl extends BaseJMSService implements AssertsService
     @Override
     public ActionResponse deleteAssetsNode(String nodeId) {
         checkNotNull(nodeId);
+        return deleteWithResponse(ClientConstants.NODES, nodeId, "/").execute();
+    }
+
+    @Override
+    public ActionResponse deleteAssetsNodeWithAssetCheck(String nodeId) {
+        checkNotNull(nodeId);
+        //patch node assets to empty
+        String url = ClientConstants.NODES_ASSETS.replace("{id}", nodeId);
+        String removeUrl = ClientConstants.NODES_ASSETS_REMOVE.replace("{id}", nodeId);
+        try {
+            List<Asset> assetList = get(Asset.class, url).executeList();
+            if (assetList.size() > 0) {
+                List<String> idList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
+                String[] objects = idList.stream().toArray(String[]::new);
+                Map<String, String[]> map = new HashMap<>(1);
+                map.put("assets", objects);
+                patch(JSON.class, removeUrl).json(JSON.toJSONString(map)).execute();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return deleteWithResponse(ClientConstants.NODES, nodeId, "/").execute();
     }
 
@@ -139,7 +164,7 @@ public class AssertsServiceImpl extends BaseJMSService implements AssertsService
 
     @Override
     public AdminUser updateAdminUserAuthInfo(AdminUser adminUser) {
-        String url =  ClientConstants.ADMIN_USERS_AUTH.replace("{id}",adminUser.getId());
+        String url = ClientConstants.ADMIN_USERS_AUTH.replace("{id}", adminUser.getId());
         return patch(AdminUser.class, url).json(JSON.toJSONString(adminUser)).execute();
     }
 
@@ -163,7 +188,7 @@ public class AssertsServiceImpl extends BaseJMSService implements AssertsService
 
     @Override
     public SystemUser updateSystemUserAuthInfo(SystemUser systemUser) {
-        String url = ClientConstants.SYSTEM_USERS_AUTHINFO.replace("{id}",systemUser.getId());
+        String url = ClientConstants.SYSTEM_USERS_AUTHINFO.replace("{id}", systemUser.getId());
         return patch(SystemUser.class, url).json(JSON.toJSONString(systemUser)).execute();
     }
 
