@@ -2,7 +2,7 @@ package com.jumpserver.sdk.v2.builder;
 
 import com.jumpserver.sdk.v2.api.Apis;
 import com.jumpserver.sdk.v2.common.ClientConstants;
-import com.jumpserver.sdk.v2.httpclient.Config;
+import com.jumpserver.sdk.v2.httpclient.build.Config;
 import com.jumpserver.sdk.v2.jumpserver.assets.AssertsService;
 import com.jumpserver.sdk.v2.jumpserver.luna.LunaService;
 import com.jumpserver.sdk.v2.jumpserver.org.OrgService;
@@ -59,26 +59,13 @@ public class JMSClientImpl implements JMSClient {
         return new JMSClientImpl(token, headers);
     }
 
-    @Override
-    public boolean hasXpack() {
-        if (headers.get(ClientConstants.X_JMS_ORG) != null) {
-            try {
-                this.orgs().listOrg();
-                this.token.setXpack(true);
-                return true;
-            } catch (Exception e) {
-                LOG.error("访问xpack插件失败，不存在xpack插件");
-            }
-        }
-        return false;
-    }
-
     private JMSClientImpl(Token token, Map<String, Object> headers) {
         this.headers = headers;
         this.token = token;
         map.put("client", this);
     }
 
+    @Override
     public Token getToken() {
         return token;
     }

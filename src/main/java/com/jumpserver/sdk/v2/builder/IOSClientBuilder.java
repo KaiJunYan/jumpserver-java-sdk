@@ -1,7 +1,7 @@
 package com.jumpserver.sdk.v2.builder;
 
 import com.jumpserver.sdk.v2.exceptions.AuthenticationException;
-import com.jumpserver.sdk.v2.httpclient.Config;
+import com.jumpserver.sdk.v2.httpclient.build.Config;
 
 public interface IOSClientBuilder<T, R> {
 

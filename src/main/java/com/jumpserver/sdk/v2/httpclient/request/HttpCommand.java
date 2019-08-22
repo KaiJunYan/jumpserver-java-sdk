@@ -1,7 +1,9 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.request;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.net.MediaType;
+import com.jumpserver.sdk.v2.httpclient.build.EndpointURIFunction;
+import com.jumpserver.sdk.v2.httpclient.build.HttpClientFactory;
 import org.apache.http.Header;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.*;
@@ -16,6 +18,10 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
+/***
+ * request转化为command
+ * command执行http请求
+ */
 public final class HttpCommand<R> {
 
     private HttpRequest<R> request;
@@ -34,7 +40,7 @@ public final class HttpCommand<R> {
     }
 
     private void initialize() {
-        URI url = null;
+        URI url;
         try {
             url = populateQueryParams(request);
         } catch (URISyntaxException e) {
@@ -68,7 +74,7 @@ public final class HttpCommand<R> {
     }
 
     public CloseableHttpResponse execute() throws Exception {
-
+        System.out.println("<<<<<----------------------------------------------");
         EntityBuilder builder = null;
         if (request.getEntity() != null) {
             if (InputStream.class.isAssignableFrom(request.getEntity().getClass())) {
@@ -80,23 +86,49 @@ public final class HttpCommand<R> {
                         .setText(JSON.toJSONString(request.getEntity()));
             }
         } else if (request.hasJson()) {
-            //System.out.println("请求json:" + request.getJson());
+            System.out.println("请求json:" + request.getJson());
             builder = EntityBuilder.create().setContentType(ContentType.APPLICATION_JSON).setText(request.getJson());
         }
 
-        if (builder != null && clientReq instanceof HttpEntityEnclosingRequestBase)
+        if (builder != null && clientReq instanceof HttpEntityEnclosingRequestBase) {
             ((HttpEntityEnclosingRequestBase) clientReq).setEntity(builder.build());
+        }
 
-        //Header[] headers = clientReq.getHeaders("x-jms-org");
-        //String x_jms_org = headers.length > 0 ? headers[0].getName() + ":" + headers[0].getValue() : null;
-        //System.out.println("请求Header：" + x_jms_org);
-        //System.out.println("请求路径：" + clientReq.getURI());
-        //System.out.println("请求方式：" + clientReq.getMethod());
+        Header[] headers = clientReq.getHeaders("x-jms-org");
+        String x_jms_org = headers.length > 0 ? headers[0].getName() + ":" + headers[0].getValue() : null;
+        System.out.println("请求Header：" + x_jms_org);
+
+        Header[] tokens = clientReq.getHeaders("Authorization");
+        String token = tokens.length > 0 ? tokens[0].getName() + ":" + tokens[0].getValue() : null;
+        System.out.println("请求Token：" + token);
+
+        System.out.println("请求路径：" + clientReq.getURI());
+        System.out.println("请求方式：" + clientReq.getMethod());
+        System.out.println("---------------------------------------------->>>>>");
         return client.execute(clientReq);
     }
 
-    public boolean hasEntity() {
-        return request.getEntity() != null;
+    private URI populateQueryParams(HttpRequest<R> request) throws URISyntaxException {
+        URIBuilder uri = new URIBuilder(new EndpointURIFunction().apply(request));
+        if (!request.hasQueryParams()) {
+            return uri.build();
+        }
+
+        for (Map.Entry<String, List<Object>> entry : request.getQueryParams().entrySet()) {
+            for (Object o : entry.getValue()) {
+                uri.addParameter(entry.getKey(), String.valueOf(o));
+            }
+        }
+        return uri.build();
+    }
+
+    private void populateHeaders(HttpRequest<R> request) {
+        if (!request.hasHeaders()) {
+            return;
+        }
+        for (Map.Entry<String, Object> h : request.getHeaders().entrySet()) {
+            clientReq.addHeader(h.getKey(), String.valueOf(h.getValue()));
+        }
     }
 
     public int getRetries() {
@@ -111,30 +143,5 @@ public final class HttpCommand<R> {
 
     public HttpRequest<R> getRequest() {
         return request;
-    }
-
-    private URI populateQueryParams(HttpRequest<R> request) throws URISyntaxException {
-
-        URIBuilder uri = new URIBuilder(new EndpointURIFromRequestFunction().apply(request));
-
-        if (!request.hasQueryParams())
-            return uri.build();
-
-        for (Map.Entry<String, List<Object>> entry : request.getQueryParams().entrySet()) {
-            for (Object o : entry.getValue()) {
-                uri.addParameter(entry.getKey(), String.valueOf(o));
-            }
-        }
-        return uri.build();
-    }
-
-    private void populateHeaders(HttpRequest<R> request) {
-
-        if (!request.hasHeaders())
-            return;
-
-        for (Map.Entry<String, Object> h : request.getHeaders().entrySet()) {
-            clientReq.addHeader(h.getKey(), String.valueOf(h.getValue()));
-        }
     }
 }

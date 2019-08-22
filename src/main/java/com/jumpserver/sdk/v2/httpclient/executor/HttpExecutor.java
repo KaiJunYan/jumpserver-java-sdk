@@ -1,4 +1,7 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.executor;
+
+import com.jumpserver.sdk.v2.httpclient.request.HttpRequest;
+import com.jumpserver.sdk.v2.httpclient.response.HttpResponse;
 
 public class HttpExecutor {
 

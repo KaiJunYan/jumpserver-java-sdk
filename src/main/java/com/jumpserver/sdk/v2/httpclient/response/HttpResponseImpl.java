@@ -1,9 +1,8 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.response;
 
 import com.alibaba.fastjson.JSON;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.exceptions.ClientResponseException;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -32,18 +31,17 @@ public class HttpResponseImpl implements HttpResponse {
         return new HttpResponseImpl(response);
     }
 
-    public CloseableHttpResponse unwrap() {
-        return response;
-    }
-
+    @Override
     public <T> T getEntity(Class<T> returnType) {
-        return HttpEntityHandler.handle(this, returnType, false);
+        return HttpEntityHandler.handle(this, returnType);
     }
 
+    @Override
     public <T> List<T> getEntityList(Class<T> returnType) {
-        return HttpEntityHandler.handleList(this, returnType, true);
+        return HttpEntityHandler.handleList(this, returnType);
     }
 
+    @Override
     public int getStatus() {
         return response.getStatusLine().getStatusCode();
     }
@@ -53,22 +51,26 @@ public class HttpResponseImpl implements HttpResponse {
         return response.getStatusLine().getReasonPhrase();
     }
 
+    @Override
     public InputStream getInputStream() {
         HttpEntity entity = response.getEntity();
         try {
-            if (entity != null)
+            if (entity != null) {
                 return entity.getContent();
+            }
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
         return null;
     }
 
+    @Override
     public String header(String name) {
         Header header = response.getFirstHeader(name);
         return (header != null) ? header.getValue() : null;
     }
 
+    @Override
     public Map<String, String> headers() {
         Map<String, String> retHeaders = new HashMap<String, String>();
         Header[] headers = response.getAllHeaders();
@@ -111,8 +113,9 @@ public class HttpResponseImpl implements HttpResponse {
 
     @Override
     public void close() throws IOException {
-        if (response != null)
+        if (response != null) {
             response.close();
+        }
     }
 
     @Override

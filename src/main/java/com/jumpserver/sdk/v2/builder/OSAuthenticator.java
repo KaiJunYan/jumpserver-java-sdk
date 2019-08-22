@@ -4,39 +4,38 @@ import com.alibaba.fastjson.JSONObject;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.common.HttpMethod;
 import com.jumpserver.sdk.v2.exceptions.AuthenticationException;
-import com.jumpserver.sdk.v2.httpclient.HttpEntityHandler;
-import com.jumpserver.sdk.v2.httpclient.HttpExecutor;
-import com.jumpserver.sdk.v2.httpclient.HttpRequest;
-import com.jumpserver.sdk.v2.httpclient.HttpResponse;
-import com.jumpserver.sdk.v2.model.Org;
+import com.jumpserver.sdk.v2.httpclient.response.HttpEntityHandler;
+import com.jumpserver.sdk.v2.httpclient.executor.HttpExecutor;
+import com.jumpserver.sdk.v2.httpclient.request.HttpRequest;
+import com.jumpserver.sdk.v2.httpclient.response.HttpResponse;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 
+/***
+ *  认证器
+ */
 public class OSAuthenticator {
 
     private static final String TOKEN_INDICATOR = "Tokens";
     private static final Logger LOG = LoggerFactory.getLogger(OSAuthenticator.class);
-    private static Map<String, Object> headers;
 
     @SuppressWarnings("rawtypes")
     public static JMSClient invoke(String endpoint, String name, String password, Map<String, Object> headersToSession) {
-        headers = headersToSession;
-        return authenticate(endpoint, name, password);
+        return authenticate(endpoint, name, password, headersToSession);
     }
 
-    private static JMSClient authenticate(String endpoint, String username, String password) throws AuthenticationException {
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("username", username);
-        jsonObject.put("password", password);
-
-        if (endpoint.endsWith("/")) {
+    private static JMSClient authenticate(String endpoint, String username, String password, Map<String, Object> headers) throws AuthenticationException {
+        JSONObject jsonObject = new JSONObject() {{
+            put("username", username);
+            put("password", password);
+        }};
+        if (endpoint.endsWith(ClientConstants.URI_SEP)) {
             endpoint = endpoint.substring(0, endpoint.length() - 1);
         }
-
         //获得token的请求
         HttpRequest<Token> request = HttpRequest.builder(Token.class)
                 .endpoint(endpoint)
@@ -47,15 +46,11 @@ public class OSAuthenticator {
                 .build();
 
         JMSClient client;
+        HttpResponse response = null;
         try {
-            HttpResponse response = HttpExecutor.create().execute(request);
-
-            if (response.getStatus() >= 400) {
-                try {
-                    throw new AuthenticationException(response.getStatusMessage());
-                } finally {
-                    HttpEntityHandler.closeQuietly(response);
-                }
+            response = HttpExecutor.create().execute(request);
+            if (response.getStatus() >= HttpStatus.SC_BAD_REQUEST) {
+                throw new AuthenticationException(IOUtils.toString(response.getInputStream(), "UTF-8"));
             }
             Token token = response.getEntity(Token.class);
             token.setUsername(username);
@@ -64,15 +59,12 @@ public class OSAuthenticator {
             client = JMSClientImpl.createSession(token, headers);
         } catch (Exception e) {
             throw new AuthenticationException(e.getMessage());
+        } finally {
+            if (response != null) {
+                HttpEntityHandler.closeQuietly(response);
+            }
         }
         return client;
-    }
-
-    public static void reAuthenticate() {
-        LOG.debug("Re-Authenticating session due to expired Token or invalid response");
-        JMSClient session = JMSClientImpl.getCurrent();
-        Token token = session.getToken();
-        authenticate(token.getEndpoint(), token.getUsername(), token.getPassword());
     }
 
 }

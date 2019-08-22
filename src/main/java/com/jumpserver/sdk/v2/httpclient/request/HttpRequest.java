@@ -1,17 +1,17 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.request;
 
 import com.google.common.collect.Maps;
 import com.jumpserver.sdk.v2.builder.JMSClientImpl;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.common.HttpMethod;
 import com.jumpserver.sdk.v2.exceptions.JmsException;
+import com.jumpserver.sdk.v2.httpclient.build.Config;
 import com.jumpserver.sdk.v2.model.entity.ModelEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class HttpRequest<R> {
 
@@ -28,7 +28,6 @@ public class HttpRequest<R> {
 
     public HttpRequest() {
     }
-
 
     public static RequestBuilder<Void> builder() {
         return new RequestBuilder<Void>(Void.class);
@@ -229,8 +228,9 @@ public class HttpRequest<R> {
          * @return the request builder
          */
         public RequestBuilder<R> contentType(String contentType) {
-            if (contentType != null)
+            if (contentType != null) {
                 request.contentType = contentType;
+            }
             return this;
         }
 
@@ -241,12 +241,12 @@ public class HttpRequest<R> {
          */
         public HttpRequest<R> build() {
             if (!request.headers.containsKey(ClientConstants.HEADER_FOR_AUTH)) {
-                JMSClientImpl ses = JMSClientImpl.getCurrent();
-                if (ses == null) {
-                    throw new JmsException("Unable to retrieve current when building a  HttpRequest ");
-                }
-                request.getHeaders().put(ClientConstants.HEADER_AUTHORIZATION, ClientConstants.BEARER + ses.getToken().getToken());
-                request.endpoint = ses.getToken().getEndpoint();
+            JMSClientImpl ses = JMSClientImpl.getCurrent();
+            if (ses == null) {
+                throw new JmsException("Unable to retrieve current session when building a  HttpRequest ");
+            }
+            request.getHeaders().put(ClientConstants.HEADER_AUTHORIZATION, ClientConstants.BEARER + ses.getToken().getToken());
+            request.endpoint = ses.getToken().getEndpoint();
             }
             return request;
         }

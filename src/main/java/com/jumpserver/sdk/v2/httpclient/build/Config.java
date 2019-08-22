@@ -1,4 +1,4 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.build;
 
 import javax.net.ssl.SSLContext;
 

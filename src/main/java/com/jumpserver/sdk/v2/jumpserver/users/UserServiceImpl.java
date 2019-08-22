@@ -2,7 +2,7 @@ package com.jumpserver.sdk.v2.jumpserver.users;
 
 import com.alibaba.fastjson.JSON;
 import com.jumpserver.sdk.v2.common.ActionResponse;
-import com.jumpserver.sdk.v2.common.BaseJMSService;
+import com.jumpserver.sdk.v2.common.BaseJmsService;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.entity.MapEntity;
 import com.jumpserver.sdk.v2.model.User;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class UserServiceImpl extends BaseJMSService implements UserService {
+public class UserServiceImpl extends BaseJmsService implements UserService {
 
     @Override
     public List<User> list() {
@@ -62,6 +62,7 @@ public class UserServiceImpl extends BaseJMSService implements UserService {
 
     @Override
     public List<UserGroup> userGroups() {
+        // TODO ...
         return get(UserGroup.class, uri(ClientConstants.USERGROUPS)).executeList();
     }
 

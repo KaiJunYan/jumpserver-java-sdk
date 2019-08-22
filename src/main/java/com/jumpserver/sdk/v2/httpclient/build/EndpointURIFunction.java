@@ -1,16 +1,16 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.build;
 
 import com.google.common.base.Function;
+import com.jumpserver.sdk.v2.httpclient.request.HttpRequest;
 
 import static com.jumpserver.sdk.v2.common.ClientConstants.URI_SEP;
 
-public class EndpointURIFromRequestFunction implements Function<HttpRequest<?>, String> {
-
-
+public class EndpointURIFunction implements Function<HttpRequest<?>, String> {
     @Override
     public String apply(HttpRequest<?> request) {
-        if (request.getEndpoint().endsWith(URI_SEP) || request.getPath().startsWith(URI_SEP))
+        if (request.getEndpoint().endsWith(URI_SEP) || request.getPath().startsWith(URI_SEP)) {
             return escape(request.getEndpoint() + request.getPath());
+        }
 
         return escape(request.getEndpoint() + URI_SEP + request.getPath());
     }

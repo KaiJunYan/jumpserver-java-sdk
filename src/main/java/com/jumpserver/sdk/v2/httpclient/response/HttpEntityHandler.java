@@ -1,4 +1,4 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.response;
 
 import com.jumpserver.sdk.v2.common.ActionResponse;
 import com.jumpserver.sdk.v2.exceptions.ClientResponseException;
@@ -18,21 +18,25 @@ public class HttpEntityHandler {
     private static final Logger LOG = LoggerFactory.getLogger(HttpEntityHandler.class);
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> handleList(HttpResponse response, Class<T> returnType, boolean list) {
-        if (response.getStatus() >= 400) {
-            throw new ClientResponseException(response.getStatusMessage());
+    public static <T> List<T> handleList(HttpResponse response, Class<T> returnType) {
+        try {
+            if (response.getStatus() >= 400) {
+                throw new ClientResponseException(response.getStatusMessage());
+            }
+            return response.readEntityList(returnType);
+        } finally {
+            closeQuietly(response);
         }
-        return response.readEntityList(returnType);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T handle(HttpResponse response, Class<T> returnType, boolean list) {
+    public static <T> T handle(HttpResponse response, Class<T> returnType) {
         try {
             String text = "";
             if (response.getStatus() >= 400) {
                 try {
                     InputStream inputStream = response.getInputStream();
-                    text = IOUtils.toString(inputStream);
+                    text = IOUtils.toString(inputStream, "UTF-8");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -59,9 +63,4 @@ public class HttpEntityHandler {
         }
     }
 
-    public static int statusAndClose(HttpResponse response) {
-        int status = response.getStatus();
-        closeQuietly(response);
-        return status;
-    }
 }

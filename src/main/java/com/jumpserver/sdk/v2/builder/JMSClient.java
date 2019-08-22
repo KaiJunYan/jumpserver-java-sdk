@@ -11,8 +11,6 @@ public interface JMSClient {
     //token 信息
     Token getToken();
 
-    boolean hasXpack();
-
     //users 用户信息
     UserService users();
 

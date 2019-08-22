@@ -1,11 +1,9 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.build;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HttpClientFactory {
 
@@ -13,7 +11,7 @@ public class HttpClientFactory {
 
     private CloseableHttpClient client;
 
-    CloseableHttpClient getClient(Config config) {
+    public CloseableHttpClient getClient(Config config) {
         if (client == null) {
             synchronized (this) {
                 if (client == null) {

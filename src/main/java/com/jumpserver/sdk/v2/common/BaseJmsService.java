@@ -3,25 +3,17 @@ package com.jumpserver.sdk.v2.common;
 import com.google.common.base.Joiner;
 import com.jumpserver.sdk.v2.builder.JMSClientImpl;
 import com.jumpserver.sdk.v2.exceptions.JmsException;
-import com.jumpserver.sdk.v2.httpclient.HttpExecutor;
-import com.jumpserver.sdk.v2.httpclient.HttpRequest;
-import com.jumpserver.sdk.v2.httpclient.HttpResponse;
+import com.jumpserver.sdk.v2.httpclient.executor.HttpExecutor;
+import com.jumpserver.sdk.v2.httpclient.request.HttpRequest;
+import com.jumpserver.sdk.v2.httpclient.response.HttpResponse;
 import com.jumpserver.sdk.v2.model.entity.ModelEntity;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class BaseJMSService {
+public class BaseJmsService {
 
-    private static ThreadLocal<String> reqIdContainer = new ThreadLocal<String>();
-
-    public String getXOpenstackRequestId() {
-        return reqIdContainer.get();
-    }
-
-    protected BaseJMSService() {
+    protected BaseJmsService() {
     }
 
     protected <R> Invocation<R> get(Class<R> returnType, String... path) {
@@ -69,14 +61,16 @@ public class BaseJMSService {
     }
 
     protected String uri(String path, Object... params) {
-        if (params.length == 0)
+        if (params.length == 0) {
             return path;
+        }
         return String.format(path, params);
     }
 
     protected String replace(String path, String id) {
-        if (path.length() == 0 || id.length() == 0)
+        if (path.length() == 0 || id.length() == 0) {
             return path;
+        }
         return path.replace("{id}", id);
     }
 
@@ -92,6 +86,7 @@ public class BaseJMSService {
         }
         HttpRequest.RequestBuilder<R> req = HttpRequest.builder(returnType).config(ses.getConfig())
                 .method(method).path(path);
+        //取了验证那里的header信息
         Map headers = ses.getHeaders();
         if (headers != null && headers.size() > 0) {
             return new Invocation<R>(req).headers(headers);
@@ -100,6 +95,10 @@ public class BaseJMSService {
         }
     }
 
+    /***
+     * 配置请求、执行请求
+     * @param <R>
+     */
     protected static class Invocation<R> {
         HttpRequest.RequestBuilder<R> req;
 
@@ -107,39 +106,16 @@ public class BaseJMSService {
             this.req = req;
         }
 
-        public HttpRequest<R> getRequest() {
-            return req.build();
-        }
-
         public Invocation<R> param(String name, Object value) {
             req.queryParam(name, value);
             return this;
         }
 
-        public Invocation<R> updateParam(String name, Object value) {
-            req.updateQueryParam(name, value);
-            return this;
-        }
-
         public Invocation<R> params(Map<String, ? extends Object> params) {
             if (params != null) {
-                for (String name : params.keySet())
+                for (String name : params.keySet()) {
                     req.queryParam(name, params.get(name));
-            }
-            return this;
-        }
-
-        public Invocation<R> param(boolean condition, String name, Object value) {
-            if (condition)
-                req.queryParam(name, value);
-            return this;
-        }
-
-        public Invocation<R> paramLists(Map<String, ? extends Iterable<? extends Object>> params) {
-            if (params != null) {
-                for (Map.Entry<String, ? extends Iterable<? extends Object>> pair : params.entrySet())
-                    for (Object value : pair.getValue())
-                        req.queryParam(pair.getKey(), value);
+                }
             }
             return this;
         }
@@ -160,8 +136,9 @@ public class BaseJMSService {
         }
 
         public Invocation<R> headers(Map<String, ? extends Object> headers) {
-            if (headers != null)
+            if (headers != null) {
                 req.headers(headers);
+            }
             return this;
         }
 
@@ -182,11 +159,5 @@ public class BaseJMSService {
             return res.getEntityList(request.getReturnType());
         }
 
-    }
-
-    protected <T> List<T> toList(T[] arr) {
-        if (arr == null)
-            return Collections.emptyList();
-        return Arrays.asList(arr);
     }
 }

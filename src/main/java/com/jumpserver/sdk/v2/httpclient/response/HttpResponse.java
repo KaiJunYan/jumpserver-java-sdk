@@ -1,4 +1,4 @@
-package com.jumpserver.sdk.v2.httpclient;
+package com.jumpserver.sdk.v2.httpclient.response;
 
 
 import java.io.Closeable;

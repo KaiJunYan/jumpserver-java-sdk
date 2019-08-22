@@ -2,14 +2,13 @@ package com.jumpserver.sdk.v2.jumpserver.assets;
 
 import com.alibaba.fastjson.JSON;
 import com.jumpserver.sdk.v2.common.ActionResponse;
-import com.jumpserver.sdk.v2.common.BaseJMSService;
+import com.jumpserver.sdk.v2.common.BaseJmsService;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.AdminUser;
 import com.jumpserver.sdk.v2.model.Asset;
 import com.jumpserver.sdk.v2.model.AssetsNode;
 import com.jumpserver.sdk.v2.model.SystemUser;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author yankaijun
  * @date 2018/10/16 上午10:35
  */
-public class AssertsServiceImpl extends BaseJMSService implements AssertsService {
+public class AssertsServiceImpl extends BaseJmsService implements AssertsService {
 
     //资产节点
     @Override

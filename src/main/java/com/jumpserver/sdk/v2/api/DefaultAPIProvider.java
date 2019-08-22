@@ -31,8 +31,9 @@ public class DefaultAPIProvider implements APIProvider {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(Class<T> api) {
-        if (instances.containsKey(api))
+        if (instances.containsKey(api)) {
             return (T) instances.get(api);
+        }
 
         if (bindings.containsKey(api)) {
             try {

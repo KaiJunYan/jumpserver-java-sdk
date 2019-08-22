@@ -2,7 +2,7 @@ package com.jumpserver.sdk.v2.jumpserver.permissions;
 
 import com.alibaba.fastjson.JSON;
 import com.jumpserver.sdk.v2.common.ActionResponse;
-import com.jumpserver.sdk.v2.common.BaseJMSService;
+import com.jumpserver.sdk.v2.common.BaseJmsService;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.AssetsPermission;
 
@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author yankaijun
  * @date 2018/10/16 上午10:34
  */
-public class PermissionServiceImpl extends BaseJMSService implements PermissionService {
+public class PermissionServiceImpl extends BaseJmsService implements PermissionService {
     @Override
     public List<AssetsPermission> list() {
         return get(AssetsPermission.class, uri(ClientConstants.ASSET_PERMISSIONS)).executeList();
