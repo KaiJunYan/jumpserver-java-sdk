@@ -2,6 +2,7 @@ package client;
 
 import com.jumpserver.sdk.v2.builder.ClientBuilder;
 import com.jumpserver.sdk.v2.builder.JMSClient;
+import com.jumpserver.sdk.v2.httpclient.build.Config;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,8 +43,9 @@ public class JMSClientTest {
         try {
             JMSClient os;
             ClientBuilder credentials = new ClientBuilder()
-                    .endpoint(endPoint)
-                    .credentials(username, password);
+                                            .endpoint(endPoint)
+                                            .credentials(username, password)
+                                            .withConfig(Config.newConfig().withConnectionTimeout(10000).withReadTimeout(10000));
             if (StringUtils.isBlank(orgId)) {
                 os = credentials.authenticate();
             } else {

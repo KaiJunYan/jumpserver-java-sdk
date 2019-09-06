@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.common.HttpMethod;
 import com.jumpserver.sdk.v2.exceptions.AuthenticationException;
+import com.jumpserver.sdk.v2.httpclient.build.Config;
 import com.jumpserver.sdk.v2.httpclient.response.HttpEntityHandler;
 import com.jumpserver.sdk.v2.httpclient.executor.HttpExecutor;
 import com.jumpserver.sdk.v2.httpclient.request.HttpRequest;
@@ -24,11 +25,11 @@ public class OSAuthenticator {
     private static final Logger LOG = LoggerFactory.getLogger(OSAuthenticator.class);
 
     @SuppressWarnings("rawtypes")
-    public static JMSClient invoke(String endpoint, String name, String password, Map<String, Object> headersToSession) {
-        return authenticate(endpoint, name, password, headersToSession);
+    public static JMSClient invoke(String endpoint, String name, String password, Map<String, Object> headersToSession, Config config) {
+        return authenticate(endpoint, name, password, headersToSession, config);
     }
 
-    private static JMSClient authenticate(String endpoint, String username, String password, Map<String, Object> headers) throws AuthenticationException {
+    private static JMSClient authenticate(String endpoint, String username, String password, Map<String, Object> headers, Config config) throws AuthenticationException {
         JSONObject jsonObject = new JSONObject() {{
             put("username", username);
             put("password", password);
@@ -42,6 +43,7 @@ public class OSAuthenticator {
                 .method(HttpMethod.POST)
                 .header(ClientConstants.HEADER_FOR_AUTH, TOKEN_INDICATOR)
                 .json(jsonObject.toString())
+                .config(config)
                 .path(ClientConstants.TOKEN)
                 .build();
 
@@ -50,13 +52,15 @@ public class OSAuthenticator {
         try {
             response = HttpExecutor.create().execute(request);
             if (response.getStatus() >= HttpStatus.SC_BAD_REQUEST) {
-                throw new AuthenticationException(IOUtils.toString(response.getInputStream(), "UTF-8"));
+                String s = IOUtils.toString(response.getInputStream(), "UTF-8");
+                LOG.error("authenticate error，code: {} ，message: {}", response.getStatus(), s);
+                throw new AuthenticationException(s);
             }
             Token token = response.getEntity(Token.class);
             token.setUsername(username);
             token.setPassword(password);
             token.setEndpoint(endpoint);
-            client = JMSClientImpl.createSession(token, headers);
+            client = JMSClientImpl.createSession(token, headers, config);
         } catch (Exception e) {
             throw new AuthenticationException(e.getMessage());
         } finally {

@@ -21,6 +21,7 @@ import java.util.Map;
 public class JMSClientImpl implements JMSClient {
 
     private Token token;
+    private Config config;
     private Map<String, Object> headers;
     private static final Logger LOG = LoggerFactory.getLogger(JMSClientImpl.class);
     @SuppressWarnings("rawtypes")
@@ -55,13 +56,14 @@ public class JMSClientImpl implements JMSClient {
         return Apis.getPermissionServices();
     }
 
-    public static JMSClient createSession(Token token, Map<String, Object> headers) {
-        return new JMSClientImpl(token, headers);
+    public static JMSClient createSession(Token token, Map<String, Object> headers, Config config) {
+        return new JMSClientImpl(token, headers, config);
     }
 
-    private JMSClientImpl(Token token, Map<String, Object> headers) {
+    private JMSClientImpl(Token token, Map<String, Object> headers, Config config) {
         this.headers = headers;
         this.token = token;
+        this.config = config;
         map.put("client", this);
     }
 
@@ -71,7 +73,10 @@ public class JMSClientImpl implements JMSClient {
     }
 
     public Config getConfig() {
-        return Config.newConfig();
+        if (config == null) {
+            return Config.newConfig();
+        }
+        return this.config;
     }
 
     public Map getHeaders() {

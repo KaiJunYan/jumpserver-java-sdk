@@ -12,7 +12,7 @@ public final class Config {
     private boolean ignoreSSLVerification;
     private int maxConnections;
     private int maxConnectionsPerRoute;
-    private String natHostOrIP;
+    private Proxy proxy;
 
     private Config() {
     }
@@ -51,6 +51,11 @@ public final class Config {
         return this;
     }
 
+    public Config withProxy(Proxy proxy) {
+        this.proxy = proxy;
+        return this;
+    }
+
     public int getConnectTimeout() {
         return connectTimeout;
     }
@@ -73,6 +78,10 @@ public final class Config {
 
     public int getMaxConnectionsPerRoute() {
         return maxConnectionsPerRoute;
+    }
+
+    public Proxy getProxy() {
+        return proxy;
     }
 
 }

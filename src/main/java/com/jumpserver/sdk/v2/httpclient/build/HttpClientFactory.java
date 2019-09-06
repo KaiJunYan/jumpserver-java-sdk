@@ -1,13 +1,20 @@
 package com.jumpserver.sdk.v2.httpclient.build;
 
+import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class HttpClientFactory {
 
     public static final HttpClientFactory INSTANCE = new HttpClientFactory();
+    private static final Logger LOG = LoggerFactory.getLogger(HttpClientFactory.class);
 
     private CloseableHttpClient client;
 
@@ -28,7 +35,7 @@ public class HttpClientFactory {
         //HttpClientBuilder cb = HttpClientBuilder.create().setUserAgent(USER_AGENT);
 
         //代理
-        /*if (config.getProxy() != null) {
+        if (config.getProxy() != null) {
             try {
                 URL url = new URL(config.getProxy().getHost());
                 HttpHost proxy = new HttpHost(url.getHost(), config.getProxy().getPort(), url.getProtocol());
@@ -36,7 +43,7 @@ public class HttpClientFactory {
             } catch (MalformedURLException e) {
                 LOG.error(e.getMessage(), e);
             }
-        }*/
+        }
 
         if (config.isIgnoreSSLVerification()) {
             cb.setSslcontext(UntrustedSSL.getSSLContext());
@@ -56,14 +63,13 @@ public class HttpClientFactory {
 
         RequestConfig.Builder rcb = RequestConfig.custom();
 
-        if (config.getConnectTimeout() > 0)
+        if (config.getConnectTimeout() > 0) {
             rcb.setConnectTimeout(config.getConnectTimeout());
+        }
 
-        if (config.getReadTimeout() > 0)
+        if (config.getReadTimeout() > 0) {
             rcb.setSocketTimeout(config.getReadTimeout());
-
-        if (config.getReadTimeout() > 0)
-            rcb.setSocketTimeout(config.getReadTimeout());
+        }
 
         return cb.setDefaultRequestConfig(rcb.build()).build();
     }

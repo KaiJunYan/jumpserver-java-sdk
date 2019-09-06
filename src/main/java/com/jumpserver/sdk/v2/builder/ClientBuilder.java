@@ -44,7 +44,7 @@ public class ClientBuilder implements IOSClientBuilder<ClientBuilder, JMSClient>
 
     @Override
     public JMSClient authenticate() {
-        return OSAuthenticator.invoke(endpoint, user, password, headers);
+        return OSAuthenticator.invoke(endpoint, user, password, headers, config);
     }
 
 }
