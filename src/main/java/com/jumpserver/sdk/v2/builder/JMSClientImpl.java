@@ -1,5 +1,6 @@
 package com.jumpserver.sdk.v2.builder;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jumpserver.sdk.v2.api.Apis;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.httpclient.build.Config;
@@ -25,11 +26,7 @@ public class JMSClientImpl implements JMSClient {
     private Map<String, Object> headers;
     private static final Logger LOG = LoggerFactory.getLogger(JMSClientImpl.class);
     @SuppressWarnings("rawtypes")
-    private static final Map<String, JMSClientImpl> map = new HashMap<>();
-
-    public static JMSClientImpl getCurrent() {
-        return map.get("client");
-    }
+    private static final ThreadLocal<JMSClientImpl> sessions = new ThreadLocal<>();
 
     @Override
     public UserService users() {
@@ -64,7 +61,17 @@ public class JMSClientImpl implements JMSClient {
         this.headers = headers;
         this.token = token;
         this.config = config;
-        map.put("client", this);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("创建client的对象：{}, header:{}", this, JSONObject.toJSONString(headers));
+        }
+        sessions.set(this);
+    }
+
+    public static JMSClientImpl getCurrent() {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("重复使用client -->" + sessions.get());
+        }
+        return sessions.get();
     }
 
     @Override
@@ -79,6 +86,7 @@ public class JMSClientImpl implements JMSClient {
         return this.config;
     }
 
+    @Override
     public Map getHeaders() {
         return this.headers;
     }
