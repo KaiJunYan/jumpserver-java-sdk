@@ -2,7 +2,6 @@ package com.jumpserver.sdk.v2.builder;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jumpserver.sdk.v2.api.Apis;
-import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.httpclient.build.Config;
 import com.jumpserver.sdk.v2.jumpserver.assets.AssertsService;
 import com.jumpserver.sdk.v2.jumpserver.luna.LunaService;
@@ -12,7 +11,6 @@ import com.jumpserver.sdk.v2.jumpserver.users.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -22,6 +20,7 @@ import java.util.Map;
 public class JMSClientImpl implements JMSClient {
 
     private Token token;
+    private ApiKey apiKey;
     private Config config;
     private Map<String, Object> headers;
     private static final Logger LOG = LoggerFactory.getLogger(JMSClientImpl.class);
@@ -53,14 +52,15 @@ public class JMSClientImpl implements JMSClient {
         return Apis.getPermissionServices();
     }
 
-    public static JMSClient createSession(Token token, Map<String, Object> headers, Config config) {
-        return new JMSClientImpl(token, headers, config);
+    public static JMSClient createSession(Token token, ApiKey apiKey, Map<String, Object> headers, Config config) {
+        return new JMSClientImpl(token, apiKey, headers, config);
     }
 
-    private JMSClientImpl(Token token, Map<String, Object> headers, Config config) {
+    private JMSClientImpl(Token token, ApiKey apiKey, Map<String, Object> headers, Config config) {
         this.headers = headers;
         this.token = token;
         this.config = config;
+        this.apiKey = apiKey;
         if (LOG.isDebugEnabled()) {
             LOG.debug("创建client的对象：{}, header:{}", this, JSONObject.toJSONString(headers));
         }
@@ -79,6 +79,11 @@ public class JMSClientImpl implements JMSClient {
         return token;
     }
 
+    @Override
+    public ApiKey getApiKey() {
+        return apiKey;
+    }
+
     public Config getConfig() {
         if (config == null) {
             return Config.newConfig();
@@ -90,7 +95,6 @@ public class JMSClientImpl implements JMSClient {
     public Map getHeaders() {
         return this.headers;
     }
-
 }
 
 

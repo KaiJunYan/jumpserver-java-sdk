@@ -3,6 +3,7 @@ package jms;
 import com.jumpserver.sdk.v2.builder.ClientBuilder;
 import com.jumpserver.sdk.v2.builder.JMSClient;
 import com.jumpserver.sdk.v2.common.ActionResponse;
+import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
@@ -18,8 +19,9 @@ public class JmsAssetsServiceTest {
     private JMSClient os;
     private String endPoint;
     private String username;
-    private String password;
     private String orgId;
+    private String keyId;
+    private String keySecret;
 
     private String assetId = "9a4aadd7-3aab-4a67-b191-52298ef6d2fb";
 
@@ -31,20 +33,20 @@ public class JmsAssetsServiceTest {
             properties.load(resourceAsStream);
             endPoint = (String) properties.get("endPoint");
             username = (String) properties.get("username");
-            password = (String) properties.get("password");
+            keyId = (String) properties.get("keyId");
+            keySecret = (String) properties.get("keySecret");
             orgId = (String) properties.get("orgId");
         } catch (IOException e) {
             e.printStackTrace();
         }
         ClientBuilder credentials = new ClientBuilder()
                 .endpoint(endPoint)
-                .credentials(username, password);
+                .credentials(username, keyId, keySecret);
         if (StringUtils.isBlank(orgId)) {
             os = credentials.authenticate();
         } else {
-            os = credentials.header("x-jms-org", orgId).authenticate();
+            os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
         }
-        System.out.println("JmsAssetsServiceTest get token:" + os.getToken().getToken());
     }
 
     //=========================== 资产 =============================

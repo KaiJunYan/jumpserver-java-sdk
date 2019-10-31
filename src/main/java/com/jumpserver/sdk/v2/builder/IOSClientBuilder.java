@@ -7,7 +7,7 @@ public interface IOSClientBuilder<T, R> {
 
     T withConfig(Config config);
 
-    T credentials(String userId, String password);
+    T credentials(String user, String keyId, String keySecret);
 
     T endpoint(String endpoint);
 

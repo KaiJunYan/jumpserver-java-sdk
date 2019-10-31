@@ -22,7 +22,8 @@ public class JMSClientTest {
 
     private String endPoint;
     private String username;
-    private String password;
+    private String keyId;
+    private String keySecret;
     private String orgId;
 
     @Before
@@ -34,7 +35,8 @@ public class JMSClientTest {
             properties.load(resourceAsStream);
             endPoint = (String) properties.get("endPoint");
             username = (String) properties.get("username");
-            password = (String) properties.get("password");
+            keyId = (String) properties.get("keyId");
+            keySecret = (String) properties.get("keySecret");
             orgId = (String) properties.get("orgId");
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,12 +49,12 @@ public class JMSClientTest {
             JMSClient os;
             ClientBuilder credentials = new ClientBuilder()
                     .endpoint(endPoint)
-                    .credentials(username, password)
+                    .credentials(username, keyId, keySecret)
                     .withConfig(Config.newConfig().withConnectionTimeout(10000).withReadTimeout(10000));
             if (StringUtils.isBlank(orgId)) {
                 os = credentials.authenticate();
             } else {
-                os = credentials.header("x-jms-org", orgId).authenticate();
+                os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
             }
             System.out.println("=======JMSClientTest======");
             System.out.println(os.getToken());
@@ -69,15 +71,15 @@ public class JMSClientTest {
     public void tokenWithOrgChange() {
         JMSClient client = new ClientBuilder()
                 .endpoint(endPoint)
-                .credentials(username, password)
-                .header("x-jms-org","2107470f-1107-4352-84fc-8de6ef3b7fe8")
+                .credentials(username, keyId, keySecret)
+                .header(ClientConstants.X_JMS_ORG,"2107470f-1107-4352-84fc-8de6ef3b7fe8")
                 .withConfig(Config.newConfig().withConnectionTimeout(10000).withReadTimeout(10000)).authenticate();
         System.out.println(client.getHeaders());
         List<UserGroup> userGroups = client.users().userGroups();
         userGroups.stream().forEach(u -> System.out.println(u.getName()));
 
         //切换组织
-        client.getHeaders().put("x-jms-org", "84d8a23e-5bd9-410e-9438-756054daf128");
+        client.getHeaders().put(ClientConstants.X_JMS_ORG, "84d8a23e-5bd9-410e-9438-756054daf128");
         System.out.println(client.getHeaders());
         List<UserGroup> userGroups2 = client.users().userGroups();
         userGroups2.stream().forEach(u -> System.out.println(u.getName()));

@@ -2,6 +2,8 @@ package com.jumpserver.sdk.v2.common;
 
 public final class ClientConstants {
 
+    private static final String BASE_URL = "/api/v1";
+
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
     public static final String X_JMS_ORG = "x-jms-org";
@@ -11,51 +13,51 @@ public final class ClientConstants {
     public static final String CONTENT_TYPE_JSON = "application/json";
 
     // Paths
-    public static final String TOKEN = "/api/users/v1/auth/";
+    public static final String TOKEN = BASE_URL + "/users/auth/";
     public static final String URI_SEP = "/";
 
     // user
-    public static final String USERS = "/api/users/v1/users/";
-    public static final String USERGROUPS = "/api/users/v1/groups/";
-    public static final String USER_PASSWORD_RESET = "/api/users/v1/users/{id}/password/";
+    public static final String USERS = BASE_URL + "/users/users/";
+    public static final String USERGROUPS = BASE_URL + "/users/groups/";
+    public static final String USER_PASSWORD_RESET = BASE_URL + "/users/users/{id}/password/";
 
     // assets
-    public static final String NODES = "/api/assets/v1/nodes/";
-    public static final String NODES_ASSETS = "/api/assets/v1/nodes/{id}/assets/";
+    public static final String NODES = BASE_URL + "/assets/nodes/";
+    public static final String NODES_ASSETS = BASE_URL + "/assets/nodes/{id}/assets/";
 
     // nodes
-    public static final String ASSETS = "/api/assets/v1/assets/";
+    public static final String ASSETS = BASE_URL + "/assets/assets/";
 
-    public static final String ORG = "/api/orgs/v1/orgs/";
-    public static final String ORGADMINS = "/api/orgs/v1/org/{org_id}/membership/admins/";
-    public static final String ORGUSERS = "/api/orgs/v1/org/{org_id}/membership/users/";
+    public static final String ORG = BASE_URL + "/orgs/orgs/";
+    public static final String ORGADMINS = BASE_URL + "/orgs/orgs/{org_id}/membership/admins/";
+    public static final String ORGUSERS = BASE_URL + "/orgs/orgs/{org_id}/membership/users/";
 
     // nodes children
-    public static final String NODES_ID_CHILDREN = "/api/assets/v1/nodes/{id}/children/";
-    public static final String NODES_CHILDREN = "/api/assets/v1/nodes/children/";
-    public static final String NODES_CHILDREN_ADD = "/api/assets/v1/nodes/{id}/children/add/";
-    public static final String NODES_ASSETS_ADD = "/api/assets/v1/nodes/{id}/assets/add/";
-    public static final String NODES_ASSETS_REMOVE = "/api/assets/v1/nodes/{id}/assets/remove/";
+    public static final String NODES_ID_CHILDREN = BASE_URL + "/assets/nodes/{id}/children/";
+    public static final String NODES_CHILDREN = BASE_URL + "/assets/nodes/children/";
+    public static final String NODES_CHILDREN_ADD = BASE_URL + "/assets/nodes/{id}/children/add/";
+    public static final String NODES_ASSETS_ADD = BASE_URL + "/assets/nodes/{id}/assets/add/";
+    public static final String NODES_ASSETS_REMOVE = BASE_URL + "/assets/nodes/{id}/assets/remove/";
 
     // label
-    public static final String LABELS = "/api/assets/v1/labels/";
+    public static final String LABELS = BASE_URL + "/assets/labels/";
 
     // admin_user
-    public static final String ADMIN_USERS = "/api/assets/v1/admin-user/";
-    public static final String ADMIN_USERS_CLUSTER = "/api/assets/v1/admin-user/{id}/clusters/";
-    public static final String ADMIN_USERS_AUTH = "/api/assets/v1/admin-user/{id}/auth/";
+    public static final String ADMIN_USERS = BASE_URL + "/assets/admin-users/";
+    public static final String ADMIN_USERS_CLUSTER = BASE_URL + "/assets/admin-users/{id}/clusters/";
+    public static final String ADMIN_USERS_AUTH = BASE_URL + "/assets/admin-users/{id}/auth/";
 
     // system_user
-    public static final String SYSTEM_USERS = "/api/assets/v1/system-user/";
-    public static final String SYSTEM_USERS_AUTHINFO = "/api/assets/v1/system-user/{id}/auth-info/";
-    public static final String SYSTEM_USERS_PUSH = "/api/assets/v1/system-user/{id}/push/";
+    public static final String SYSTEM_USERS = BASE_URL + "/assets/system-users/";
+    public static final String SYSTEM_USERS_AUTHINFO = BASE_URL + "/assets/system-users/{id}/auth-info/";
+    public static final String SYSTEM_USERS_PUSH = "/assets/system-users/{id}/push/";
 
     // permission
-    public static final String ASSET_PERMISSIONS = "/api/perms/v1/asset-permissions/";
+    public static final String ASSET_PERMISSIONS = BASE_URL + "/perms/asset-permissions/";
 
     // luna
-    public static final String LUNA_TOKEN = "/api/users/v1/connection-token/";
-    public static final String LUNA_TOKEN_VALIDATE = "/api/users/v1/connection-token/?token=";
+    public static final String LUNA_TOKEN = BASE_URL + "/users/connection-token/";
+    public static final String LUNA_TOKEN_VALIDATE = BASE_URL + "/users/connection-token/?token=";
     public static final String LUNA_LINUX_CONNECT = "/luna/connect?system=linux&token=";
     public static final String LUNA_WINDOWS_CONNECT = "/luna/connect?system=windows&token=";
     public static final String LUNA_URL = "/luna/?login_to=";

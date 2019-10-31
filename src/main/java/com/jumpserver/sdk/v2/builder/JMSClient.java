@@ -18,6 +18,12 @@ public interface JMSClient {
     Token getToken();
 
     /**
+     * API Key 信息
+     * @return
+     */
+    ApiKey getApiKey();
+
+    /**
      * users 用户信息
      *
      * @return

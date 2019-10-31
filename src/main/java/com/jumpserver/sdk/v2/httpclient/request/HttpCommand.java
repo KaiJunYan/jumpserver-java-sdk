@@ -2,6 +2,9 @@ package com.jumpserver.sdk.v2.httpclient.request;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.net.MediaType;
+import com.jumpserver.sdk.v2.builder.ApiKey;
+import com.jumpserver.sdk.v2.common.ClientConstants;
+import com.jumpserver.sdk.v2.common.HttpsigUtil;
 import com.jumpserver.sdk.v2.httpclient.build.EndpointURIFunction;
 import com.jumpserver.sdk.v2.httpclient.build.HttpClientFactory;
 import org.apache.http.Header;
@@ -69,7 +72,6 @@ public final class HttpCommand<R> {
             default:
                 throw new IllegalArgumentException("Unsupported http method: " + request.getMethod());
         }
-        clientReq.setHeader("Accept", MediaType.JSON_UTF_8.toString());
         populateHeaders(request);
     }
 
@@ -94,13 +96,9 @@ public final class HttpCommand<R> {
             ((HttpEntityEnclosingRequestBase) clientReq).setEntity(builder.build());
         }
 
-        Header[] headers = clientReq.getHeaders("x-jms-org");
+        Header[] headers = clientReq.getHeaders(ClientConstants.X_JMS_ORG);
         String x_jms_org = headers.length > 0 ? headers[0].getName() + ":" + headers[0].getValue() : null;
-        System.out.println("请求Header：" + x_jms_org);
-
-        Header[] tokens = clientReq.getHeaders("Authorization");
-        String token = tokens.length > 0 ? tokens[0].getName() + ":" + tokens[0].getValue() : null;
-        System.out.println("请求Token：" + token);
+        System.out.println("请求Header(x_jms_org)：" + x_jms_org);
 
         System.out.println("请求路径：" + clientReq.getURI());
         System.out.println("请求方式：" + clientReq.getMethod());

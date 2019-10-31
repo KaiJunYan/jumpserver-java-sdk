@@ -3,6 +3,7 @@ package jms;
 import com.jumpserver.sdk.v2.common.ActionResponse;
 import com.jumpserver.sdk.v2.builder.ClientBuilder;
 import com.jumpserver.sdk.v2.builder.JMSClient;
+import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.User;
 import com.jumpserver.sdk.v2.model.UserGroup;
 import org.apache.commons.lang.StringUtils;
@@ -19,12 +20,14 @@ public class JmsUserServiceTest {
     private JMSClient os;
     private String endPoint;
     private String username;
-    private String password;
     private String orgId;
+    private String keyId;
+    private String keySecret;
 
 
     private String userGroupId= "90b20128-c92c-4d69-9a18-68d9636b7ac1";
     private String userId= "570cd13a-84dd-4710-9385-99ea3ad69999";
+
     @Before
     public void token() {
         try {
@@ -33,20 +36,20 @@ public class JmsUserServiceTest {
             properties.load(resourceAsStream);
             endPoint = (String) properties.get("endPoint");
             username = (String) properties.get("username");
-            password = (String) properties.get("password");
+            keyId = (String) properties.get("keyId");
+            keySecret = (String) properties.get("keySecret");
             orgId = (String) properties.get("orgId");
         } catch (IOException e) {
             e.printStackTrace();
         }
         ClientBuilder credentials = new ClientBuilder()
                 .endpoint(endPoint)
-                .credentials(username, password);
+                .credentials(username, keyId, keySecret);
         if (StringUtils.isBlank(orgId)) {
             os = credentials.authenticate();
         } else {
-            os = credentials.header("x-jms-org", orgId).authenticate();
+            os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
         }
-        System.out.println("JmsUserServiceTest get token:" + os.getToken().getToken());
     }
 
     @Test
@@ -54,7 +57,7 @@ public class JmsUserServiceTest {
         System.out.println("add userGroup::::");
         UserGroup usergroup = new UserGroup();
         usergroup.setId(userGroupId);
-        usergroup.setName("B组");
+        usergroup.setName("T组");
         UserGroup userGroupBack = os.users().createUserGroup(usergroup);
         System.out.println(userGroupBack.getId());
         System.out.println(userGroupBack.getName());
@@ -64,7 +67,7 @@ public class JmsUserServiceTest {
     public void updateUserGroups() {
         System.out.println("update userGroup::::");
         UserGroup usergroup = new UserGroup();
-        usergroup.setName("A组");
+        usergroup.setName("X组");
         usergroup.setId(userGroupId);
         UserGroup userGroupBack = os.users().updateUserGroup(usergroup);
         System.out.println(userGroupBack.getId());
@@ -98,7 +101,7 @@ public class JmsUserServiceTest {
     @Test
     public void getByName() {
         System.out.println("getByName user:::");
-        List<User> users = os.users().getByName("bbb");
+        List<User> users = os.users().getByName("admin");
         for (User user : users) {
             System.out.println(user.getName() + " :: " + user.getEmail());
         }
@@ -132,7 +135,6 @@ public class JmsUserServiceTest {
         ActionResponse admin = os.users().changePassword(userId, "admin123");
         System.out.println(admin);
     }
-
 
     @Test
     public void deleteUserGroups() {

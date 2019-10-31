@@ -245,7 +245,7 @@ public class HttpRequest<R> {
             if (ses == null) {
                 throw new JmsException("Unable to retrieve current session when building a  HttpRequest ");
             }
-            request.getHeaders().put(ClientConstants.HEADER_AUTHORIZATION, ClientConstants.BEARER + ses.getToken().getToken());
+            // request.getHeaders().put(ClientConstants.HEADER_AUTHORIZATION, ClientConstants.BEARER + ses.getToken().getToken());
             request.endpoint = ses.getToken().getEndpoint();
             }
             return request;

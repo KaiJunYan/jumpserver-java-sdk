@@ -88,6 +88,8 @@ public class BaseJmsService {
                 .method(method).path(path);
         //取了验证那里的header信息
         Map headers = ses.getHeaders();
+        // 签名后的头部
+        headers.putAll(HttpsigUtil.getSignHeaders(ses.getApiKey(), method.name(), path));
         if (headers != null && headers.size() > 0) {
             return new Invocation<R>(req).headers(headers);
         } else {
