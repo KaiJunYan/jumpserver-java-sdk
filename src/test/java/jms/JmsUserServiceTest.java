@@ -1,56 +1,18 @@
 package jms;
 
 import com.jumpserver.sdk.v2.common.ActionResponse;
-import com.jumpserver.sdk.v2.builder.ClientBuilder;
-import com.jumpserver.sdk.v2.builder.JMSClient;
-import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.User;
 import com.jumpserver.sdk.v2.model.UserGroup;
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
-public class JmsUserServiceTest {
-
-    private JMSClient os;
-    private String endPoint;
-    private String username;
-    private String orgId;
-    private String keyId;
-    private String keySecret;
-
+/**
+ * 用户API调用相关测试用例
+ */
+public class JmsUserServiceTest extends CommonBeforeTest{
 
     private String userGroupId= "90b20128-c92c-4d69-9a18-68d9636b7ac1";
     private String userId= "570cd13a-84dd-4710-9385-99ea3ad69999";
-
-    @Before
-    public void token() {
-        try {
-            Properties properties = new Properties();
-            InputStream resourceAsStream = this.getClass().getResourceAsStream("/credential.property");
-            properties.load(resourceAsStream);
-            endPoint = (String) properties.get("endPoint");
-            username = (String) properties.get("username");
-            keyId = (String) properties.get("keyId");
-            keySecret = (String) properties.get("keySecret");
-            orgId = (String) properties.get("orgId");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ClientBuilder credentials = new ClientBuilder()
-                .endpoint(endPoint)
-                .credentials( keyId, keySecret);
-        if (StringUtils.isBlank(orgId)) {
-            os = credentials.authenticate();
-        } else {
-            os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
-        }
-    }
 
     @Test
     public void addUserGroups() {
@@ -122,12 +84,19 @@ public class JmsUserServiceTest {
 
     @Test
     public void users() {
-        System.out.println("list user:::");
+        System.out.println("list users:::");
         List<User> users = os.users().list();
         System.out.println(users.size());
         for (User user : users) {
             System.out.println(user.getName() + " :: " + user.getEmail());
         }
+    }
+
+    @Test
+    public void get() {
+        System.out.println("get user:::");
+        User user = os.users().get(userId);
+        System.out.println(user.getName() + " :: " + user.getEmail());
     }
 
     @Test

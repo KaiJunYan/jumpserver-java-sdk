@@ -26,11 +26,7 @@ public class OSAuthenticator {
         }
         JMSClient client;
         try {
-            ApiKey apiKey = new ApiKey();
-            apiKey.setKeySecret(keySecret);
-            apiKey.setKeyId(keyId);
-            apiKey.setEndpoint(endpoint);
-
+            ApiKey apiKey = new ApiKey(keyId, keySecret, endpoint);
             client = JMSClientImpl.createSession(apiKey, headers, config);
             //execute a request
             client.users().list();

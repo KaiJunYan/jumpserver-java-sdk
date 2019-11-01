@@ -5,15 +5,12 @@ public final class ClientConstants {
     private static final String BASE_URL = "/api/v1";
 
     public static final String HEADER_AUTHORIZATION = "Authorization";
-    public static final String BEARER = "Bearer ";
     public static final String X_JMS_ORG = "x-jms-org";
 
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
-    public static final String HEADER_FOR_AUTH = "Auth-request";
     public static final String CONTENT_TYPE_JSON = "application/json";
 
     // Paths
-    public static final String TOKEN = BASE_URL + "/users/auth/";
     public static final String URI_SEP = "/";
 
     // user
@@ -56,10 +53,6 @@ public final class ClientConstants {
     public static final String ASSET_PERMISSIONS = BASE_URL + "/perms/asset-permissions/";
 
     // luna
-    public static final String LUNA_TOKEN = BASE_URL + "/users/connection-token/";
-    public static final String LUNA_TOKEN_VALIDATE = BASE_URL + "/users/connection-token/?token=";
-    public static final String LUNA_LINUX_CONNECT = "/luna/connect?system=linux&token=";
-    public static final String LUNA_WINDOWS_CONNECT = "/luna/connect?system=windows&token=";
     public static final String LUNA_URL = "/luna/?login_to=";
 
 }
