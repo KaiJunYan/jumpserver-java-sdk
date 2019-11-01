@@ -22,7 +22,7 @@ public class UserServiceImpl extends BaseJmsService implements UserService {
     @Override
     public User get(String userId) {
         checkNotNull(userId);
-        return get(User.class, ClientConstants.USERS, userId).execute();
+        return get(User.class, ClientConstants.USERS, userId, "/").execute();
     }
 
     @Override
