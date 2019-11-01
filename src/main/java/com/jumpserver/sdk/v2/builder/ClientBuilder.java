@@ -12,7 +12,6 @@ import java.util.Map;
 public class ClientBuilder implements IOSClientBuilder<ClientBuilder, JMSClient> {
 
     String endpoint;
-    String user;
     Config config;
     String keyId;
     String keySecret;
@@ -25,8 +24,7 @@ public class ClientBuilder implements IOSClientBuilder<ClientBuilder, JMSClient>
     }
 
     @Override
-    public ClientBuilder credentials(String user, String keyId, String keySecret) {
-        this.user = user;
+    public ClientBuilder credentials(String keyId, String keySecret) {
         this.keyId = keyId;
         this.keySecret = keySecret;
         return this;
@@ -46,7 +44,7 @@ public class ClientBuilder implements IOSClientBuilder<ClientBuilder, JMSClient>
 
     @Override
     public JMSClient authenticate() {
-        return OSAuthenticator.invoke(endpoint, user, keyId, keySecret, headers, config);
+        return OSAuthenticator.invoke(endpoint, keyId, keySecret, headers, config);
     }
 
 }

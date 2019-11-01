@@ -197,11 +197,13 @@ public class HttpRequest<R> {
          * @return the request builder
          */
         public RequestBuilder<R> updateQueryParam(String key, Object value) {
-            if (value == null)
+            if (value == null) {
                 return this;
+            }
 
-            if (request.queryParams == null)
+            if (request.queryParams == null) {
                 request.queryParams = Maps.newHashMap();
+            }
 
             List<Object> values = new ArrayList<Object>();
             values.add(value);
@@ -240,14 +242,11 @@ public class HttpRequest<R> {
          * @return HttpRequest
          */
         public HttpRequest<R> build() {
-            if (!request.headers.containsKey(ClientConstants.HEADER_FOR_AUTH)) {
             JMSClientImpl ses = JMSClientImpl.getCurrent();
             if (ses == null) {
                 throw new JmsException("Unable to retrieve current session when building a  HttpRequest ");
             }
-            // request.getHeaders().put(ClientConstants.HEADER_AUTHORIZATION, ClientConstants.BEARER + ses.getToken().getToken());
-            request.endpoint = ses.getToken().getEndpoint();
-            }
+            request.endpoint = ses.getApiKey().getEndpoint();
             return request;
         }
     }

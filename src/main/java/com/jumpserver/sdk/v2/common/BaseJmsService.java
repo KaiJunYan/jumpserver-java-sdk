@@ -84,8 +84,7 @@ public class BaseJmsService {
         if (ses == null) {
             throw new JmsException("Unable to retrieve current session. Please verify thread has a current session available.");
         }
-        HttpRequest.RequestBuilder<R> req = HttpRequest.builder(returnType).config(ses.getConfig())
-                .method(method).path(path);
+        HttpRequest.RequestBuilder<R> req = HttpRequest.builder(returnType).config(ses.getConfig()).endpoint(ses.getApiKey().getEndpoint()).method(method).path(path);
         //取了验证那里的header信息
         Map headers = ses.getHeaders();
         // 签名后的头部

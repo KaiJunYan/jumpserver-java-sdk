@@ -11,14 +11,8 @@ import java.util.Map;
 public interface JMSClient {
 
     /**
-     * token 信息
-     *
-     * @return
-     */
-    Token getToken();
-
-    /**
      * API Key 信息
+     *
      * @return
      */
     ApiKey getApiKey();

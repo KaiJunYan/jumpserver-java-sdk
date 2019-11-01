@@ -106,6 +106,12 @@ public final class HttpCommand<R> {
         return client.execute(clientReq);
     }
 
+    /***
+     * 构建请求的完整URL
+     * @param request
+     * @return
+     * @throws URISyntaxException
+     */
     private URI populateQueryParams(HttpRequest<R> request) throws URISyntaxException {
         URIBuilder uri = new URIBuilder(new EndpointURIFunction().apply(request));
         if (!request.hasQueryParams()) {
@@ -120,6 +126,11 @@ public final class HttpCommand<R> {
         return uri.build();
     }
 
+    /**
+     * 构建请求Header
+     *
+     * @param request
+     */
     private void populateHeaders(HttpRequest<R> request) {
         if (!request.hasHeaders()) {
             return;

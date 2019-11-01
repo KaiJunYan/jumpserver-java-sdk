@@ -19,7 +19,6 @@ import java.util.Map;
  */
 public class JMSClientImpl implements JMSClient {
 
-    private Token token;
     private ApiKey apiKey;
     private Config config;
     private Map<String, Object> headers;
@@ -52,13 +51,12 @@ public class JMSClientImpl implements JMSClient {
         return Apis.getPermissionServices();
     }
 
-    public static JMSClient createSession(Token token, ApiKey apiKey, Map<String, Object> headers, Config config) {
-        return new JMSClientImpl(token, apiKey, headers, config);
+    public static JMSClient createSession(ApiKey apiKey, Map<String, Object> headers, Config config) {
+        return new JMSClientImpl(apiKey, headers, config);
     }
 
-    private JMSClientImpl(Token token, ApiKey apiKey, Map<String, Object> headers, Config config) {
+    private JMSClientImpl(ApiKey apiKey, Map<String, Object> headers, Config config) {
         this.headers = headers;
-        this.token = token;
         this.config = config;
         this.apiKey = apiKey;
         if (LOG.isDebugEnabled()) {
@@ -72,11 +70,6 @@ public class JMSClientImpl implements JMSClient {
             LOG.debug("重复使用client -->" + sessions.get());
         }
         return sessions.get();
-    }
-
-    @Override
-    public Token getToken() {
-        return token;
     }
 
     @Override

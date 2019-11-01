@@ -26,7 +26,7 @@ public class LunaServiceImpl extends BaseJmsService implements LunaService {
             throw new JmsException("Unable to retrieve current session. Please verify thread has a current session available.");
         }
         StringBuffer result = new StringBuffer();
-        result.append(current.getToken().getEndpoint())
+        result.append(current.getApiKey().getEndpoint())
                 .append(ClientConstants.LUNA_LINUX_CONNECT)
                 .append(token);
         return result.toString();
@@ -39,7 +39,7 @@ public class LunaServiceImpl extends BaseJmsService implements LunaService {
             throw new JmsException("Unable to retrieve current session. Please verify thread has a current session available.");
         }
         StringBuffer result = new StringBuffer();
-        result.append(current.getToken().getEndpoint())
+        result.append(current.getApiKey().getEndpoint())
                 .append(ClientConstants.LUNA_WINDOWS_CONNECT)
                 .append(token);
         return result.toString();
@@ -52,7 +52,7 @@ public class LunaServiceImpl extends BaseJmsService implements LunaService {
             throw new JmsException("Unable to retrieve current session. Please verify thread has a current session available.");
         }
         StringBuffer result = new StringBuffer();
-        result.append(current.getToken().getEndpoint())
+        result.append(current.getApiKey().getEndpoint())
                 .append(ClientConstants.LUNA_URL)
                 .append(assetId);
         return result.toString();

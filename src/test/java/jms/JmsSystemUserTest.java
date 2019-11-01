@@ -41,7 +41,7 @@ public class JmsSystemUserTest {
         }
         ClientBuilder credentials = new ClientBuilder()
                 .endpoint(endPoint)
-                .credentials(username, keyId, keySecret);
+                .credentials( keyId, keySecret);
         if (StringUtils.isBlank(orgId)) {
             os = credentials.authenticate();
         } else {

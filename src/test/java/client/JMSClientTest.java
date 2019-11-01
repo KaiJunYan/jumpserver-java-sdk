@@ -21,7 +21,6 @@ import java.util.Properties;
 public class JMSClientTest {
 
     private String endPoint;
-    private String username;
     private String keyId;
     private String keySecret;
     private String orgId;
@@ -31,10 +30,8 @@ public class JMSClientTest {
         try {
             Properties properties = new Properties();
             InputStream resourceAsStream = this.getClass().getResourceAsStream("/credential.property");
-            //InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("credential.property");
             properties.load(resourceAsStream);
             endPoint = (String) properties.get("endPoint");
-            username = (String) properties.get("username");
             keyId = (String) properties.get("keyId");
             keySecret = (String) properties.get("keySecret");
             orgId = (String) properties.get("orgId");
@@ -49,7 +46,7 @@ public class JMSClientTest {
             JMSClient os;
             ClientBuilder credentials = new ClientBuilder()
                     .endpoint(endPoint)
-                    .credentials(username, keyId, keySecret)
+                    .credentials(keyId, keySecret)
                     .withConfig(Config.newConfig().withConnectionTimeout(10000).withReadTimeout(10000));
             if (StringUtils.isBlank(orgId)) {
                 os = credentials.authenticate();
@@ -57,10 +54,7 @@ public class JMSClientTest {
                 os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
             }
             System.out.println("=======JMSClientTest======");
-            System.out.println(os.getToken());
-            System.out.println(os.getToken());
-            System.out.println(os.getToken().getUser().getId());
-            System.out.println(os.getToken().getUser().getEmail());
+            System.out.println(os.getApiKey());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,8 +65,8 @@ public class JMSClientTest {
     public void tokenWithOrgChange() {
         JMSClient client = new ClientBuilder()
                 .endpoint(endPoint)
-                .credentials(username, keyId, keySecret)
-                .header(ClientConstants.X_JMS_ORG,"2107470f-1107-4352-84fc-8de6ef3b7fe8")
+                .credentials(keyId, keySecret)
+                .header(ClientConstants.X_JMS_ORG, "2107470f-1107-4352-84fc-8de6ef3b7fe8")
                 .withConfig(Config.newConfig().withConnectionTimeout(10000).withReadTimeout(10000)).authenticate();
         System.out.println(client.getHeaders());
         List<UserGroup> userGroups = client.users().userGroups();

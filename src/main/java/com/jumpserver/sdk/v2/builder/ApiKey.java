@@ -28,4 +28,13 @@ public class ApiKey {
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
     }
+
+    @Override
+    public String toString() {
+        return "ApiKey{" +
+                "keyId='" + keyId + '\'' +
+                ", keySecret='" + keySecret + '\'' +
+                ", endpoint='" + endpoint + '\'' +
+                '}';
+    }
 }
