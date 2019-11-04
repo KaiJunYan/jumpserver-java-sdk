@@ -26,9 +26,10 @@ public class UserServiceImpl extends BaseJmsService implements UserService {
     }
 
     @Override
-    public List<User> getByName(String userName) {
-        checkNotNull(userName);
-        return get(User.class, uri(ClientConstants.USERS)).param("name", userName).executeList();
+    public List<User> search(String searchName) {
+        checkNotNull(searchName);
+        String url = ClientConstants.USERS + "?search=" + searchName;
+        return get(User.class, uri(url)).executeList();
     }
 
     @Override

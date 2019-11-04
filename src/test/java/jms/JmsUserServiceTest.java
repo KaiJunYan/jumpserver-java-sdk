@@ -1,5 +1,6 @@
 package jms;
 
+import com.alibaba.fastjson.JSON;
 import com.jumpserver.sdk.v2.common.ActionResponse;
 import com.jumpserver.sdk.v2.builder.ClientBuilder;
 import com.jumpserver.sdk.v2.builder.JMSClient;
@@ -99,11 +100,11 @@ public class JmsUserServiceTest {
     }
 
     @Test
-    public void getByName() {
-        System.out.println("getByName user:::");
-        List<User> users = os.users().getByName("admin");
+    public void search() {
+        System.out.println("search user:::");
+        List<User> users = os.users().search("kaijun@fit2cloud.com");
         for (User user : users) {
-            System.out.println(user.getName() + " :: " + user.getEmail());
+            System.out.println(JSON.toJSON(user));
         }
     }
 

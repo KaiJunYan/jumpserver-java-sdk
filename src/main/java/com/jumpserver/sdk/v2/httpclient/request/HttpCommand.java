@@ -3,6 +3,7 @@ package com.jumpserver.sdk.v2.httpclient.request;
 import com.alibaba.fastjson.JSON;
 import com.google.common.net.MediaType;
 import com.jumpserver.sdk.v2.builder.ApiKey;
+import com.jumpserver.sdk.v2.builder.OSAuthenticator;
 import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.common.HttpsigUtil;
 import com.jumpserver.sdk.v2.httpclient.build.EndpointURIFunction;
@@ -14,6 +15,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -26,6 +29,8 @@ import java.util.Map;
  * command执行http请求
  */
 public final class HttpCommand<R> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HttpCommand.class);
 
     private HttpRequest<R> request;
     private CloseableHttpClient client;
@@ -76,7 +81,7 @@ public final class HttpCommand<R> {
     }
 
     public CloseableHttpResponse execute() throws Exception {
-        System.out.println("<<<<<----------------------------------------------");
+        LOG.debug("<<<<<----------------------------------------------");
         EntityBuilder builder = null;
         if (request.getEntity() != null) {
             if (InputStream.class.isAssignableFrom(request.getEntity().getClass())) {
@@ -88,7 +93,7 @@ public final class HttpCommand<R> {
                         .setText(JSON.toJSONString(request.getEntity()));
             }
         } else if (request.hasJson()) {
-            System.out.println("请求json:" + request.getJson());
+            LOG.info("请求json:" + request.getJson());
             builder = EntityBuilder.create().setContentType(ContentType.APPLICATION_JSON).setText(request.getJson());
         }
 
@@ -96,13 +101,17 @@ public final class HttpCommand<R> {
             ((HttpEntityEnclosingRequestBase) clientReq).setEntity(builder.build());
         }
 
-        Header[] headers = clientReq.getHeaders(ClientConstants.X_JMS_ORG);
-        String x_jms_org = headers.length > 0 ? headers[0].getName() + ":" + headers[0].getValue() : null;
-        System.out.println("请求Header(x_jms_org)：" + x_jms_org);
-
-        System.out.println("请求路径：" + clientReq.getURI());
-        System.out.println("请求方式：" + clientReq.getMethod());
-        System.out.println("---------------------------------------------->>>>>");
+        Header[] allHeaders = clientReq.getAllHeaders();
+        if (allHeaders.length > 0) {
+            for (Header header : allHeaders) {
+                if (ClientConstants.X_JMS_ORG.equals(header.getName()) || ClientConstants.HEADER_AUTHORIZATION.equals(header.getName())) {
+                    LOG.debug("请求Header：" + header.getName() + ":" + header.getValue());
+                }
+            }
+        }
+        LOG.debug("请求路径：" + clientReq.getURI());
+        LOG.debug("请求方式：" + clientReq.getMethod());
+        LOG.debug("---------------------------------------------->>>>>");
         return client.execute(clientReq);
     }
 

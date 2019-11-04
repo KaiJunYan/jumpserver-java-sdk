@@ -12,7 +12,7 @@ public interface UserService {
 
     User get(String userId);
 
-    List<User> getByName(String userName);
+    List<User> search(String userName);
 
     User update(User user);
 
