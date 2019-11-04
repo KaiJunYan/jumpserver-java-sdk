@@ -1,58 +1,19 @@
 package jms;
 
-import com.jumpserver.sdk.v2.builder.ClientBuilder;
-import com.jumpserver.sdk.v2.builder.JMSClient;
 import com.jumpserver.sdk.v2.common.ActionResponse;
-import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.Org;
 import com.jumpserver.sdk.v2.model.OrgUsers;
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 /**
- * @author yankaijun
- * @date 2018/10/26 12:00 PM
+ * 组织API调用相关测试用例
  */
-public class JmsOrgServiceTest {
-    private JMSClient os;
-    private String endPoint;
-    private String username;
-    private String orgId;
-    private String keyId;
-    private String keySecret;
-
+public class JmsOrgServiceTest extends CommonBeforeTest{
 
     private String orgIdTest = "0e049ec7-d905-466b-bcfb-5a66334cae0c1";
     private  String userId = "42f1251e-70f8-4e63-a4e9-885eb1f696a7";
-    @Before
-    public void token() {
-        try {
-            Properties properties = new Properties();
-            InputStream resourceAsStream = this.getClass().getResourceAsStream("/credential.property");
-            properties.load(resourceAsStream);
-            endPoint = (String) properties.get("endPoint");
-            username = (String) properties.get("username");
-            keyId = (String) properties.get("keyId");
-            keySecret = (String) properties.get("keySecret");
-            orgId = (String) properties.get("orgId");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ClientBuilder credentials = new ClientBuilder()
-                .endpoint(endPoint)
-                .credentials( keyId, keySecret);
-        if (StringUtils.isBlank(orgId)) {
-            os = credentials.authenticate();
-        } else {
-            os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
-        }
-    }
 
     @Test
     public void addOrg() {
@@ -92,8 +53,8 @@ public class JmsOrgServiceTest {
     @Test
     public void createOrgUsers() {
         OrgUsers object = new OrgUsers();
-        object.setOrgId(orgId);
-        object.setUser(userId);
+        object.setOrgId("48afff20-32ce-43b7-8a13-5cd750acf989");
+        object.setUser("9ef25019-f01d-4865-8daf-07d27cb873ff");
         OrgUsers objectBack = os.orgs().createOrgUsers(object);
         System.out.println(objectBack.getUser());
     }

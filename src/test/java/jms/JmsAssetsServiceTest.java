@@ -1,55 +1,19 @@
 package jms;
 
-import com.jumpserver.sdk.v2.builder.ClientBuilder;
-import com.jumpserver.sdk.v2.builder.JMSClient;
 import com.jumpserver.sdk.v2.common.ActionResponse;
-import com.jumpserver.sdk.v2.common.ClientConstants;
 import com.jumpserver.sdk.v2.model.*;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
-public class JmsAssetsServiceTest {
-
-    private JMSClient os;
-    private String endPoint;
-    private String username;
-    private String orgId;
-    private String keyId;
-    private String keySecret;
+/**
+ * 资产API调用相关测试用例
+ */
+public class JmsAssetsServiceTest extends CommonBeforeTest{
 
     private String assetId = "9a4aadd7-3aab-4a67-b191-52298ef6d2fb";
 
-    @Before
-    public void token() {
-        try {
-            Properties properties = new Properties();
-            InputStream resourceAsStream = this.getClass().getResourceAsStream("/credential.property");
-            properties.load(resourceAsStream);
-            endPoint = (String) properties.get("endPoint");
-            username = (String) properties.get("username");
-            keyId = (String) properties.get("keyId");
-            keySecret = (String) properties.get("keySecret");
-            orgId = (String) properties.get("orgId");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ClientBuilder credentials = new ClientBuilder()
-                .endpoint(endPoint)
-                .credentials( keyId, keySecret);
-        if (StringUtils.isBlank(orgId)) {
-            os = credentials.authenticate();
-        } else {
-            os = credentials.header(ClientConstants.X_JMS_ORG, orgId).authenticate();
-        }
-    }
-
-    //=========================== 资产 =============================
     @Test
     public void addAsset() {
         Asset asset = new Asset();
@@ -137,25 +101,5 @@ public class JmsAssetsServiceTest {
         ActionResponse delete = os.assets().deleteAssetsNode(assetId);
         System.out.println(delete);
     }
-
-    //=========================== 标签 =============================
-//    @Test
-//    public void lb1() {
-//        AssetsLabel assetsLabel = new AssetsLabel();
-//        assetsLabel.setName("SDK-Name");
-//        assetsLabel.setValue("SDK_value");
-//        Map<String, String> map = jmsAssetsService.addAssetsLabel(assetsLabel);
-//        System.out.println(map);
-//    }
-
-//    @Test
-//    public void lb2() {
-//        AssetsLabel assetsLabel = new AssetsLabel();
-//        assetsLabel.setName("SDK-Name-Modify");
-//        assetsLabel.setValue("SDK-Name-Value");
-//        assetsLabel.setId("43ce643d-df31-4267-aadb-b9db3afec68b");
-//        Map<String, String> map = jmsAssetsService.updateAssetsLabel(assetsLabel);
-//        System.out.println(map);
-//    }
 
 }

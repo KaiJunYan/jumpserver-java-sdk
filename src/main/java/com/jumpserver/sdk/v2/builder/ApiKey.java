@@ -5,28 +5,22 @@ public class ApiKey {
     private String keySecret;
     private String endpoint;
 
-    public String getKeyId() {
-        return keyId;
+    public ApiKey(String keyId, String keySecret, String endpoint) {
+        this.keyId = keyId;
+        this.keySecret = keySecret;
+        this.endpoint = endpoint;
     }
 
-    public void setKeyId(String keyId) {
-        this.keyId = keyId;
+    public String getKeyId() {
+        return keyId;
     }
 
     public String getKeySecret() {
         return keySecret;
     }
 
-    public void setKeySecret(String keySecret) {
-        this.keySecret = keySecret;
-    }
-
     public String getEndpoint() {
         return endpoint;
-    }
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
     }
 
     @Override
