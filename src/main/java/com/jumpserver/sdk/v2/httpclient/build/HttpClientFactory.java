@@ -3,6 +3,7 @@ package com.jumpserver.sdk.v2.httpclient.build;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -46,12 +47,13 @@ public class HttpClientFactory {
         }
 
         if (config.isIgnoreSSLVerification()) {
-            cb.setSslcontext(UntrustedSSL.getSSLContext());
-            cb.setHostnameVerifier(new AllowAllHostnameVerifier());
+            cb.setSSLContext(UntrustedSSL.getSSLContext());
+            cb.setSSLHostnameVerifier(new NoopHostnameVerifier());
         }
 
-        if (config.getSslContext() != null)
-            cb.setSslcontext(config.getSslContext());
+        if (config.getSslContext() != null) {
+            cb.setSSLContext(config.getSslContext());
+        }
 
         if (config.getMaxConnections() > 0) {
             cb.setMaxConnTotal(config.getMaxConnections());
