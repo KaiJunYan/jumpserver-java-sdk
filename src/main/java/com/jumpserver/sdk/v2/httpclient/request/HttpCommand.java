@@ -1,14 +1,8 @@
 package com.jumpserver.sdk.v2.httpclient.request;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.net.MediaType;
-import com.jumpserver.sdk.v2.builder.ApiKey;
-import com.jumpserver.sdk.v2.builder.OSAuthenticator;
-import com.jumpserver.sdk.v2.common.ClientConstants;
-import com.jumpserver.sdk.v2.common.HttpsigUtil;
 import com.jumpserver.sdk.v2.httpclient.build.EndpointURIFunction;
 import com.jumpserver.sdk.v2.httpclient.build.HttpClientFactory;
-import org.apache.http.Header;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
@@ -81,7 +75,6 @@ public final class HttpCommand<R> {
     }
 
     public CloseableHttpResponse execute() throws Exception {
-        LOG.debug("<<<<<----------------------------------------------");
         EntityBuilder builder = null;
         if (request.getEntity() != null) {
             if (InputStream.class.isAssignableFrom(request.getEntity().getClass())) {
@@ -101,17 +94,14 @@ public final class HttpCommand<R> {
             ((HttpEntityEnclosingRequestBase) clientReq).setEntity(builder.build());
         }
 
-        Header[] allHeaders = clientReq.getAllHeaders();
+        /*Header[] allHeaders = clientReq.getAllHeaders();
         if (allHeaders.length > 0) {
             for (Header header : allHeaders) {
                 if (ClientConstants.X_JMS_ORG.equals(header.getName()) || ClientConstants.HEADER_AUTHORIZATION.equals(header.getName())) {
-                    LOG.debug("请求Header：" + header.getName() + ":" + header.getValue());
+                    LOG.info("请求Header：" + header.getName() + ":" + header.getValue());
                 }
             }
-        }
-        LOG.debug("请求路径：" + clientReq.getURI());
-        LOG.debug("请求方式：" + clientReq.getMethod());
-        LOG.debug("---------------------------------------------->>>>>");
+        }*/
         return client.execute(clientReq);
     }
 

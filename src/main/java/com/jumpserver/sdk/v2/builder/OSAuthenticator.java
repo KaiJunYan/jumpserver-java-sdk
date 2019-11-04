@@ -24,16 +24,8 @@ public class OSAuthenticator {
         if (endpoint.endsWith(ClientConstants.URI_SEP)) {
             endpoint = endpoint.substring(0, endpoint.length() - 1);
         }
-        JMSClient client;
-        try {
-            ApiKey apiKey = new ApiKey(keyId, keySecret, endpoint);
-            client = JMSClientImpl.createSession(apiKey, headers, config);
-            //execute a request
-            client.users().list();
-        } catch (Exception e) {
-            LOG.error("OSAuthenticator验证异常：{}", e.getMessage());
-            throw new AuthenticationException(e.getMessage());
-        }
+        ApiKey apiKey = new ApiKey(keyId, keySecret, endpoint);
+        JMSClient client = JMSClientImpl.createSession(apiKey, headers, config);
         return client;
     }
 

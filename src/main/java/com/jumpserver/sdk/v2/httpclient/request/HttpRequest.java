@@ -24,7 +24,7 @@ public class HttpRequest<R> {
     String json;
     private Config config;
     private Map<String, List<Object>> queryParams;
-    private Map<String, Object> headers = new HashMap<String, Object>();
+    private Map<String, Object> headers = new HashMap<>();
 
     public HttpRequest() {
     }
@@ -242,11 +242,6 @@ public class HttpRequest<R> {
          * @return HttpRequest
          */
         public HttpRequest<R> build() {
-            JMSClientImpl ses = JMSClientImpl.getCurrent();
-            if (ses == null) {
-                throw new JmsException("Unable to retrieve current session when building a  HttpRequest ");
-            }
-            request.endpoint = ses.getApiKey().getEndpoint();
             return request;
         }
     }
