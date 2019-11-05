@@ -3,7 +3,8 @@
 对Jumpserver提供的API进行封装，此为JAVA版本
 
 ```
-  git checkout xpack 
+  git checkout xpack   // 适配Jumpserver1.5.3之前的版本
+  git checkout xpack-1.5.3  // 适配Jumpserver1.5.3之后的版本
 ```
 切换分支，获取支持最新的接口，支持xpack插件的SDK版本
 
