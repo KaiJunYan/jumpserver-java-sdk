@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class JmsOrgServiceTest extends CommonBeforeTest{
 
-    private String orgIdTest = "0e049ec7-d905-466b-bcfb-5a66334cae0c1";
-    private  String userId = "42f1251e-70f8-4e63-a4e9-885eb1f696a7";
+    private String orgIdTest = "48afff20-32ce-43b7-8a13-5cd750acf989";
+    private  String userId = "415041b3-650c-49fe-adef-d8e36d54844e";
 
     @Test
     public void addOrg() {
@@ -53,8 +53,8 @@ public class JmsOrgServiceTest extends CommonBeforeTest{
     @Test
     public void createOrgUsers() {
         OrgUsers object = new OrgUsers();
-        object.setOrgId("48afff20-32ce-43b7-8a13-5cd750acf989");
-        object.setUser("9ef25019-f01d-4865-8daf-07d27cb873ff");
+        object.setOrgId(orgIdTest);
+        object.setUser(userId);
         OrgUsers objectBack = os.orgs().createOrgUsers(object);
         System.out.println(objectBack.getUser());
     }
@@ -69,7 +69,7 @@ public class JmsOrgServiceTest extends CommonBeforeTest{
 
     @Test
     public void deleteOrgUses() {
-        ActionResponse actionResponse = os.orgs().deleteOrgUsers(orgId, userId);
+        ActionResponse actionResponse = os.orgs().deleteOrgUsers(orgIdTest, userId);
         System.out.println(actionResponse.toString());
     }
 
@@ -77,8 +77,8 @@ public class JmsOrgServiceTest extends CommonBeforeTest{
     @Test
     public void createOrgAdmins() {
         OrgUsers object = new OrgUsers();
-        object.setOrgId(orgId);
-        object.setUser("0e049ec7-d905-466b-bcfb-5a66334cae0c");
+        object.setOrgId(orgIdTest);
+        object.setUser(userId);
         OrgUsers objectBack = os.orgs().createOrgAdmins(object);
         System.out.println(objectBack.getUser());
     }
@@ -93,7 +93,7 @@ public class JmsOrgServiceTest extends CommonBeforeTest{
 
     @Test
     public void deleteOrgAdmins() {
-        ActionResponse actionResponse = os.orgs().deleteOrgAdmins(orgId, userId);
+        ActionResponse actionResponse = os.orgs().deleteOrgAdmins(orgIdTest, userId);
         System.out.println(actionResponse.toString());
     }
 

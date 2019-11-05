@@ -5,15 +5,18 @@ import com.jumpserver.sdk.v2.common.ActionResponse;
 import com.jumpserver.sdk.v2.model.User;
 import com.jumpserver.sdk.v2.model.UserGroup;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
  * 用户API调用相关测试用例
  */
-public class JmsUserServiceTest extends CommonBeforeTest{
+public class JmsUserServiceTest extends CommonBeforeTest {
 
-    private String userGroupId= "90b20128-c92c-4d69-9a18-68d9636b7ac1";
-    private String userId= "570cd13a-84dd-4710-9385-99ea3ad69999";
+    private String userGroupId = "90b20128-c92c-4d69-9a18-68d9636b7ac1";
+    private String userId = "570cd13a-84dd-4710-9385-99ea3ad69999";
 
     @Test
     public void addUserGroups() {
@@ -47,24 +50,33 @@ public class JmsUserServiceTest extends CommonBeforeTest{
         }
     }
 
-
     @Test
     public void addUser() {
         System.out.println("add user:::");
         User user = new User();
         user.setId(userId);
-        user.setGroups(new String[]{userGroupId});
+        user.setGroups(new String[]{});
         user.setName("sdk test");
         user.setUsername("sdk");
         user.setEmail("sdk@fit2cloud.com");
-        User user1 = os.users().create(user);
-        System.out.println(user1.getId());
+        try {
+            User user1 = os.users().create(user);
+            System.out.println(user1.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        os.users().list().stream().map(User::getName).forEach(System.out::println);
+
+        os.users().search("kaijun@fit2cloud.com").stream().map(User::getEmail).forEach(System.out::println);
     }
 
     @Test
-    public void search() {
+    public void search() throws UnsupportedEncodingException {
         System.out.println("search user:::");
-        List<User> users = os.users().search("kaijun@fit2cloud.com");
+        String name = URLEncoder.encode("管理员", "UTF-8");
+//        String  name = URLEncoder.encode("admin", "UTF-8");
+        List<User> users = os.users().search(name);
         for (User user : users) {
             System.out.println(JSON.toJSON(user));
         }
