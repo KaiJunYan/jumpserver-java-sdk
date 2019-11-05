@@ -86,7 +86,7 @@ public final class HttpCommand<R> {
                         .setText(JSON.toJSONString(request.getEntity()));
             }
         } else if (request.hasJson()) {
-            LOG.info("请求json:" + request.getJson());
+            //LOG.info("请求json:" + request.getJson());
             builder = EntityBuilder.create().setContentType(ContentType.APPLICATION_JSON).setText(request.getJson());
         }
 
