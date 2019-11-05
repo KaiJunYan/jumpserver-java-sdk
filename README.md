@@ -1,6 +1,6 @@
 # Jumpserver-java-sdk  v2.0
 
-对Jumpserver提供的API进行封装，此为支持xpack插件的SDK版本
+对Jumpserver提供的API进行封装，此为支持xpack插件的SDK版本，适配Jumpserver V1.5.3以后的版本
 
 ## Getting Started
 
@@ -8,45 +8,49 @@
 <dependency>
     <groupId>com.fit2cloud</groupId>
     <artifactId>jumpserver-sdk</artifactId>
-    <version>2.0</version>
+    <version>2.0-153-SNAPSHOT</version>
 </dependency>
 ```
 
-- xpack examples: 
+### examples: 
 ``` 
   JMSClient os = new ClientBuilder()
-                  .endpoint("http://localhost:8088")
-                  .credentials("admin", "admin")
-                  .header("x-jms-org", "7c6955bc-f004-4573-b46a-4072b0dd0d03")
+                   ClientBuilder credentials = new ClientBuilder()
+                  .endpoint("endPoint")
+                  .credentials("keyId", "keySecret")
+                  .header("x-jms-org", "组织ID")
                   .authenticate();
-  System.out.println(os.getToken().getToken());
+
   
+  //列出所有用户
   List<User> users = os.users().list();
   
-  List<User> users = os.users().getByName("user01");
+  //搜索用户
+  List<User> users = os.users().search("user01");
   
+  //创建用户
   User user = new User();
   User result = os.users().create(user);
   
+  //更新用户
   User user = new User();
   user.setId("id");
   User result = os.users().update(user);
   
+  //删除用户
   os.users().delete("id");
   
 ```
-携带name为x-jms-org，value为组织Id的请求头，请看测试用例
+以上为携带name为x-jms-org，value为组织ID的请求头，对相应组织进行操作，请看测试用例
 
 
-- without xpack examples:
 ```
  JMSClient os = new ClientBuilder()
-                  .endpoint("http://localhost:8088")
-                  .credentials("admin", "admin")
+                  .endpoint("endPoint")
+                  .credentials("keyId", "keySecret")
                   .authenticate();
-  System.out.println(os.getToken().getToken());
 ```
-不需要携带请求头，单一组织，请看测试用例
+以上为不需要携带x-jms-org的请求头，对Default组织进行操作，请看测试用例
 
 
 ### 编译
