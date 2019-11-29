@@ -7,7 +7,9 @@ import com.jumpserver.sdk.v2.httpclient.executor.HttpExecutor;
 import com.jumpserver.sdk.v2.httpclient.request.HttpRequest;
 import com.jumpserver.sdk.v2.httpclient.response.HttpResponse;
 import com.jumpserver.sdk.v2.model.entity.ModelEntity;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +159,9 @@ public class BaseJmsService {
         public List<R> executeList() {
             HttpRequest<R> request = req.build();
             HttpResponse res = HttpExecutor.create().execute(request);
+            if (res == null) {
+                return new ArrayList<>();
+            }
             return res.getEntityList(request.getReturnType());
         }
 
